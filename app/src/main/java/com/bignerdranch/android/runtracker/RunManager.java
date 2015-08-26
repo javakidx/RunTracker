@@ -132,4 +132,21 @@ public class RunManager
         run.setId(mHelper.insertRun(run));
         return run;
     }
+
+    public RunDatabaseHelper.RunCursor queryRuns()
+    {
+        return mHelper.queryRuns();
+    }
+
+    public void insertLocation(Location location)
+    {
+        if (mCurrentRunId != -1)
+        {
+            mHelper.insertLocation(mCurrentRunId, location);
+        }
+        else
+        {
+            Log.e(TAG, "Location received with no trackeing run; ignoring.");
+        }
+    }
 }
