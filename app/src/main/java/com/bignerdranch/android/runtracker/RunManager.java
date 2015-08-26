@@ -3,7 +3,9 @@ package com.bignerdranch.android.runtracker;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.location.LocationManager;
+import android.util.Log;
 
 /**
  * Created by bioyang on 15/8/26.
@@ -17,6 +19,8 @@ public class RunManager
     private static RunManager sRunManager;
     private Context mAppContext;
     private LocationManager mLocationManager;
+
+    private static final String TEST_PROVIDER = "TEST_PROVIDER";
 
     private RunManager(Context context)
     {
@@ -47,8 +51,29 @@ public class RunManager
     {
         String provider = LocationManager.GPS_PROVIDER;
 
+        if (mLocationManager.getProvider(TEST_PROVIDER) != null && mLocationManager.isProviderEnabled(TEST_PROVIDER))
+        {
+            provider = TEST_PROVIDER;
+        }
+
+        Log.d(TAG, "Using provider: " + provider);
+
+        Location lastKnown = mLocationManager.getLastKnownLocation(provider);
+
+        if (lastKnown != null)
+        {
+            lastKnown.setTime(System.currentTimeMillis());
+            broadcastLocation(lastKnown);
+        }
         PendingIntent pi = getLocationPendingIntent(true);
         mLocationManager.requestLocationUpdates(provider, 0, 0, pi);
+    }
+
+    private void broadcastLocation(Location lastKnown)
+    {
+        Intent broadcast = new Intent(ACTION_LOCATION);
+        broadcast.putExtra(LocationManager.KEY_LOCATION_CHANGED, lastKnown);
+        mAppContext.sendBroadcast(broadcast);
     }
 
     public void stopLocationUpdates()
