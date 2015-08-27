@@ -73,6 +73,18 @@ public class RunFragment extends Fragment
         setRetainInstance(true);
 
         mRunManager = RunManager.get(getActivity());
+
+        Bundle args = getArguments();
+        if (args != null)
+        {
+            long runId = args.getLong(ARG_RUN_ID, -1);
+
+            if (runId != -1)
+            {
+                mRun = mRunManager.getRun(runId);
+                mLastLocation = mRunManager.getLastLocationForRun(runId);
+            }
+        }
     }
 
     @Override
@@ -92,9 +104,17 @@ public class RunFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                mRunManager.startLocationUpdates();
-                mRun = new Run();
+                //mRunManager.startLocationUpdates();
+                //mRun = new Run();
 
+                if (mRun == null)
+                {
+                    mRun = mRunManager.startNewRun();
+                }
+                else
+                {
+                    mRunManager.startTrackingRun(mRun);
+                }
                 updateUI();
             }
         });
@@ -119,6 +139,8 @@ public class RunFragment extends Fragment
     {
         boolean started = mRunManager.isTrackingRun();
 
+        boolean trackingThisRun = mRunManager.isTrackingRun(mRun);
+
         if (mRun != null)
         {
             mStartedTextView.setText(mRun.getStartDate().toString());
@@ -136,7 +158,8 @@ public class RunFragment extends Fragment
             mDurationTextView.setText(Run.formatDuration(durationSeconds));
         }
         mStartButton.setEnabled(!started);
-        mStopButton.setEnabled(started);
+//        mStopButton.setEnabled(started);
+        mStopButton.setEnabled(started && trackingThisRun);
     }
 
     @Override

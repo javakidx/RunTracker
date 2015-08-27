@@ -119,4 +119,45 @@ public class RunDatabaseHelper extends SQLiteOpenHelper
             return run;
         }
     }
+
+    public LocationCursor queryLastLocationForRun(long runId)
+    {
+        Cursor wrapped = getReadableDatabase()
+                                .query(TABLE_LOCATION
+                                        , null
+                                        , COLUMN_LOCATION_RUN_ID + "=?"
+                                        , new String[]{String.valueOf(runId)}
+                                        , null
+                                        , null,
+                                        COLUMN_LOCATION_TIMESTAMP + " asc",
+                                        "1");
+
+        return new LocationCursor(wrapped);
+    }
+
+    public static class LocationCursor extends CursorWrapper
+    {
+        public LocationCursor(Cursor cursor)
+        {
+            super(cursor);
+        }
+
+        public Location getLocation()
+        {
+            if (isBeforeFirst() || isAfterLast())
+            {
+                return null;
+            }
+
+            String provider = getString(getColumnIndex(COLUMN_LOCATION_PROVIDER));
+            Location location = new Location(provider);
+
+            location.setLongitude(getDouble(getColumnIndex(COLUMN_LOCATION_LONGITUDE)));
+            location.setLatitude(getDouble(getColumnIndex(COLUMN_LOCATION_LATITUDE)));
+            location.setAltitude(getDouble(getColumnIndex(COLUMN_LOCATION_ALTITUDE)));
+            location.setTime(getLong(getColumnIndex(COLUMN_LOCATION_TIMESTAMP)));
+
+            return location;
+        }
+    }
 }

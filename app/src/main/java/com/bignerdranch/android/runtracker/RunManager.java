@@ -172,4 +172,19 @@ public class RunManager
     {
         return run != null && run.getId() == mCurrentRunId;
     }
+
+    public Location getLastLocationForRun(long runId)
+    {
+        Location location = null;
+        RunDatabaseHelper.LocationCursor cursor = mHelper.queryLastLocationForRun(runId);
+        cursor.moveToFirst();
+
+        if (!cursor.isAfterLast())
+        {
+            location = cursor.getLocation();
+            cursor.close();
+        }
+
+        return location;
+    }
 }
