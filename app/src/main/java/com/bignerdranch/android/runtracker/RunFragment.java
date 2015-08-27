@@ -18,6 +18,9 @@ import android.widget.Toast;
  */
 public class RunFragment extends Fragment
 {
+    private static final String TAG = "RunFragment";
+    private static final String ARG_RUN_ID = "RUN_ID";
+
     private Button mStartButton;
     private Button mStopButton;
     private TextView mStartedTextView;
@@ -31,6 +34,17 @@ public class RunFragment extends Fragment
     private Run mRun;
     private Location mLastLocation;
 
+    public static RunFragment newInstance(long runId)
+    {
+        Bundle args = new Bundle();
+        args.putLong(ARG_RUN_ID, runId);
+
+        RunFragment runFragment = new RunFragment();
+        runFragment.setArguments(args);
+
+        return runFragment;
+    }
+    
     private BroadcastReceiver mLocationReceiver = new LocationReceiver(){
         @Override
         protected void onLocationReceived(Context context, Location location)

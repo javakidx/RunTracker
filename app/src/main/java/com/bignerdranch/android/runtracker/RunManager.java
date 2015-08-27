@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
@@ -148,5 +149,27 @@ public class RunManager
         {
             Log.e(TAG, "Location received with no trackeing run; ignoring.");
         }
+    }
+
+    public Run getRun(long id)
+    {
+        Run run = null;
+
+        RunDatabaseHelper.RunCursor cursor = mHelper.queryRun(id);
+        cursor.moveToFirst();
+
+        if (!cursor.isAfterLast())
+        {
+            run = cursor.getRun();
+        }
+
+        cursor.close();
+
+        return run;
+    }
+
+    public boolean isTrackingRun(Run run)
+    {
+        return run != null && run.getId() == mCurrentRunId;
     }
 }

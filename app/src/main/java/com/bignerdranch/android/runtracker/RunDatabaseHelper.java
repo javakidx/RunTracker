@@ -81,6 +81,20 @@ public class RunDatabaseHelper extends SQLiteOpenHelper
         return new RunCursor(wrapped);
     }
 
+    public RunCursor queryRun(long id)
+    {
+        Cursor wrapped = getReadableDatabase()
+                            .query(TABLE_RUN
+                                    , null  //all columns
+                                    , COLUMN_RUN_ID + " = ?"
+                                    , new String[]{String.valueOf(id)}
+                                    ,null   //group by
+                                    ,null   //order by
+                                    ,null   //having
+                                    ,"1");  //limit 1 row
+        return new RunCursor(wrapped);
+    }
+
     public static class RunCursor extends CursorWrapper
     {
         public RunCursor(Cursor c)
