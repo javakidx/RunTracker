@@ -4,7 +4,7 @@ import android.content.Context;
 import android.location.Location;
 
 /**
- * Created by 安軻 on 2015/8/31.
+ * Created by Javakid on 2015/8/31.
  */
 public class LastLocationLoader extends DataLoader<Location>
 {

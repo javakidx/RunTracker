@@ -187,4 +187,14 @@ public class RunManager
 
         return location;
     }
+
+    /**
+     * A facade for RunDatabaseHelper.
+     * @param runId
+     * @return RunDatabaseHelper.LocationCursor
+     */
+    public RunDatabaseHelper.LocationCursor getLocationsForRun(long runId)
+    {
+        return mHelper.queryLocationsFroRun(runId);
+    }
 }

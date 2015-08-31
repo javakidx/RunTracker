@@ -76,7 +76,7 @@ public class RunDatabaseHelper extends SQLiteOpenHelper
     public RunCursor queryRuns()
     {
         Cursor wrapped = getReadableDatabase().query(TABLE_RUN, null, null, null, null, null,
-                                                        COLUMN_RUN_START_DATE + " asc");
+                COLUMN_RUN_START_DATE + " asc");
 
         return new RunCursor(wrapped);
     }
@@ -88,10 +88,10 @@ public class RunDatabaseHelper extends SQLiteOpenHelper
                                     , null  //all columns
                                     , COLUMN_RUN_ID + " = ?"
                                     , new String[]{String.valueOf(id)}
-                                    ,null   //group by
-                                    ,null   //order by
-                                    ,null   //having
-                                    ,"1");  //limit 1 row
+                                    , null   //group by
+                                    , null   //order by
+                                    , null   //having
+                                    , "1");  //limit 1 row
         return new RunCursor(wrapped);
     }
 
@@ -131,6 +131,19 @@ public class RunDatabaseHelper extends SQLiteOpenHelper
                                         , null,
                                         COLUMN_LOCATION_TIMESTAMP + " asc",
                                         "1");
+
+        return new LocationCursor(wrapped);
+    }
+
+    public LocationCursor queryLocationsFroRun(long runId)
+    {
+        Cursor wrapped = getReadableDatabase().query(TABLE_LOCATION,
+                null,
+                COLUMN_LOCATION_RUN_ID + "?",
+                new String[]{String.valueOf(runId)},
+                null,
+                null,
+                COLUMN_LOCATION_TIMESTAMP + " asc");
 
         return new LocationCursor(wrapped);
     }
